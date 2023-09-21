@@ -1,4 +1,4 @@
 # Installation Guide
 
-git clone <link>
+git clone git@github.com:Ne0sky/House-of-Dishes-Dashboard.git
 

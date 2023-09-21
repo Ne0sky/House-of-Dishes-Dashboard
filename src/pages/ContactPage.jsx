@@ -112,14 +112,14 @@ const ContactPage = () => {
         <label>Message</label>
         <textarea type="textarea"
         name="message"
-        className='block min-w-full min-h-[200px] py-2 placeholder:italic px-4 my-2 border border-zinc-600 rounded-lg bg-black'
+        className='block min-w-full  min-h-[200px] py-2  placeholder:italic px-4 my-2 border border-zinc-600 rounded-lg bg-black'
         placeholder='Type your message...'
         onChange={(e)=>setMessage(e.target.value)} 
         value={message}
         required={true}
         />
         </div>
-        <Button_1 isLoading={isLoading} name={'Send Message'} />
+        <Button_1 isLoading={isLoading} className={`${isLoading}?'cursor-wait': 'cursor-default'`} name={'Send Message'} />
         </div>
 
 
