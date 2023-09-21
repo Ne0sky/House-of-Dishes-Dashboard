@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {BiLogoLinkedinSquare} from 'react-icons/bi'
 import Button_1 from '../components/Button_1'
 import {  toast } from 'react-toastify';
@@ -7,50 +7,52 @@ const ContactPage = () => {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(null)
-  const [success, setSuccess] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit=async(e)=>{
+  
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null)
-    console.log(email, name, message);
-    
-    const data={
-      'email' : email,
-      'name' : name,
-      'message':message
-  }
-    const response = await fetch('http://localhost:8000/api/contact/',{
-    method:'POST',
-    body:JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-  },
-    });
-
-    const json = await response.json();
-    
-    if(!response.ok){
-      setError(json.error)
-      setIsLoading(false)
-      toast.error({error},{
-        theme:"dark",
-        position:"bottom-right"
-      })
+    setError(null);
+  
+    try {
+      const response = await fetch('http://localhost:8000/api/contact/', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          name,
+          message,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const json = await response.json();
+  
+      if (!response.ok) {
+        setError(json.error);
+        setIsLoading(false);
+        toast.error(error, {
+          theme: 'dark',
+          position: 'bottom-right',
+        });
+      }
+  
+      if (response.ok) {
+        setIsLoading(false);
+        toast.success(json.message, {
+          theme: 'dark',
+          position: 'bottom-right',
+        });
+      }
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
     }
+  };
 
-    if(true) {
-    setIsLoading(false)
-    toast.success('success',{
-      theme:"dark",
-      position:"bottom-right"
-    })
-      
-  }
-
-    
-  }
   return (
     <div className=' pt-32 flex flex-col overflow-x-hidden max-w-screen md:flex-row gap-8  h-screen font-primary justify-center items-center px-8'>
 
@@ -119,7 +121,8 @@ const ContactPage = () => {
         required={true}
         />
         </div>
-        <Button_1 isLoading={isLoading} className={`${isLoading}?'cursor-wait': 'cursor-default'`} name={'Send Message'} />
+        <Button_1 isLoading={isLoading} className={isLoading ? 'cursor-wait' : 'cursor-default'} name={'Send Message'} />
+
         </div>
 
 
