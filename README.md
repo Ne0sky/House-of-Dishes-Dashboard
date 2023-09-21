@@ -1,4 +1,4 @@
 # Installation Guide
 
-git clome <link>
+git clone <link>
 
