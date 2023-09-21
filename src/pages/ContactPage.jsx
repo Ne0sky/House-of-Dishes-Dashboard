@@ -1,14 +1,55 @@
 import React, { useState } from 'react'
 import {BiLogoLinkedinSquare} from 'react-icons/bi'
 import Button_1 from '../components/Button_1'
+import {  toast } from 'react-toastify';
 const ContactPage = () => {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(null)
+  const [success, setSuccess] = useState('')
 
-  const handleSubmit=(e)=>{
+  const handleSubmit=async(e)=>{
     e.preventDefault();
-    console.log(e);
+    setIsLoading(true);
+    setError(null)
+    console.log(email, name, message);
+    
+    const data={
+      'email' : email,
+      'name' : name,
+      'message':message
+  }
+    const response = await fetch('http://localhost:8000/api/contact/',{
+    method:'POST',
+    body:JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+  },
+    });
+
+    const json = await response.json();
+    
+    if(!response.ok){
+      setError(json.error)
+      setIsLoading(false)
+      toast.error({error},{
+        theme:"dark",
+        position:"bottom-right"
+      })
+    }
+
+    if(true) {
+    setIsLoading(false)
+    toast.success('success',{
+      theme:"dark",
+      position:"bottom-right"
+    })
+      
+  }
+
+    
   }
   return (
     <div className=' pt-32 flex flex-col overflow-x-hidden max-w-screen md:flex-row gap-8  h-screen font-primary justify-center items-center px-8'>
@@ -27,7 +68,9 @@ const ContactPage = () => {
       </div>
 
       <div className='w-full md:w-1/2'>
-      <form className='signup  flex flex-col  justify-center  items-center text-white font-primary w-full ' onSubmit={handleSubmit}>
+      <form
+      onSubmit={handleSubmit}
+       className='signup  flex flex-col  justify-center  items-center text-white font-primary w-full ' >
       
       
       
@@ -38,13 +81,15 @@ const ContactPage = () => {
         
         
         
-        <div className='flex md:gap-4 flex-col  min-w-full'>
+        <div 
+        className='flex md:gap-4 flex-col  items-center min-w-full'>
 
         <div className='my-2 min-w-full'>
         <label>Name</label>
         <input type="text"
         className='block min-w-full py-2 placeholder:italic px-4 my-2 border border-zinc-600 rounded-lg bg-black'
         placeholder='Full Name'
+        name="name"
         onChange={(e)=>setName(e.target.value)} 
         value={name}
         required={true}
@@ -54,6 +99,7 @@ const ContactPage = () => {
         <div className='my-2 min-w-full'>
         <label>Email</label>
         <input type="email"
+        name="email"
         className='block min-w-full py-2 placeholder:italic px-4 my-2 border border-zinc-600 rounded-lg bg-black'
         placeholder='abc@gmail.com'
         onChange={(e)=>setEmail(e.target.value)} 
@@ -65,6 +111,7 @@ const ContactPage = () => {
         <div className='my-2 min-w-full'>
         <label>Message</label>
         <textarea type="textarea"
+        name="message"
         className='block min-w-full min-h-[200px] py-2 placeholder:italic px-4 my-2 border border-zinc-600 rounded-lg bg-black'
         placeholder='Type your message...'
         onChange={(e)=>setMessage(e.target.value)} 
@@ -72,6 +119,7 @@ const ContactPage = () => {
         required={true}
         />
         </div>
+        <Button_1 isLoading={isLoading} name={'Send Message'} />
         </div>
 
 
@@ -79,7 +127,7 @@ const ContactPage = () => {
 
         
 
-      <Button_1 name={'Send Message'} />
+      
 
       
         </div>
