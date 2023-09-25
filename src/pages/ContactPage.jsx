@@ -42,6 +42,9 @@ const ContactPage = () => {
   
       if (response.ok) {
         setIsLoading(false);
+        setEmail('')
+        setMessage('')
+        setName('')
         toast.success(json.message, {
           theme: 'dark',
           position: 'bottom-right',
